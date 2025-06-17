@@ -11,14 +11,14 @@ This repository demonstrates the pilot use of a patented proprietary deep learni
 7027 images manually annotated by pixels were selected from 16 surgical videos University Hospital in Singapore for training as ground truth, and 2266 annotated images from 4 separate surgical videos were used for validation. This ensured a balanced validation ratio of nearly 20% for each label (spleen, left kidney, renal artery, renal vein, and ureter). 
 
 # Hardware Requirement
-This repository provides a streamlined solution for running YOLOv11 Surgical AI Imaging applications container on Advantech edge AI hardware. The Container includes toolkit  which automatically detects your device capabilities and sets up an optimized environment for computer vision tasks with full hardware acceleration support.
+This repository provides a streamlined solution for running SST Surgical AI Imaging applications container on Advantech edge AI hardware. The Container includes toolkit  which automatically detects your device capabilities and sets up an optimized environment for computer vision tasks with full hardware acceleration support.
 
 Designed specifically for Advantech edge AI devices based on NVIDIA IGX platforms, this toolkit enables rapid deployment of object detection, instance segmentation, and classification applications with minimal configuration required.
 
 ## Features
 
 - **Complete Docker Environment**: Pre-configured container with all necessary hardware acceleration settings
-- **Optimized Model Management**: Tools for downloading and converting YOLOv11 models to accelerated formats
+- **Optimized Model Management**: Tools for downloading and converting MISARS models to accelerated formats
 - **Hardware Acceleration Support**: Full integration with NVIDIA CUDA, TensorRT, and GStreamer
 - **X11 Display Support**: Seamless visualization of model outputs directly from the container
 - **Multiple Vision Applications**: Ready-to-use applications for surgical tissue detection, segmentation, and classification
@@ -26,7 +26,7 @@ Designed specifically for Advantech edge AI devices based on NVIDIA IGX platform
 ## Applications Included
 
 ### Object Detection
-- Real-time object detection using YOLOv11
+- Real-time object detection using MISARS
 - Support for 80+ COCO dataset classes
 - Configurable confidence thresholds and post-processing
 
@@ -74,7 +74,7 @@ Parameters:
 
 Examples:
 ```bash
-# Download a YOLOv11n model
+# Download a MISARS model
 python3 src/model-load.py
 ```
 
@@ -103,7 +103,7 @@ python3 src/model-export.py
 
 ### MISARS Surgical AI Application
 
-The main `misars.py` application offers a complete solution for running YOLOv8 models:
+The main `misars.py` application offers a complete solution for running MISARS models:
 
 ```bash
 python3 src/misars.py 
@@ -114,7 +114,7 @@ python3 src/misars.py
 ![Advantech Logo](data/detection.png)
 Parameters:
 - `--input`: Path to video file, image, or camera device ID (0 for primary camera)
-- `--model`: Path to model file or model name (e.g., 'yolov11.pt')
+- `--model`: Path to model file or model name (e.g., 'misars.pt')
 - `--task`: Task type ('detect', 'segment', 'classify')
 - `--conf`: Confidence threshold (default: 0.25)
 - `--show`: Display results in real-time window
@@ -124,10 +124,10 @@ Parameters:
 Examples:
 ```bash
 # Run object detection on a test video
-python3 src/misars.py --input data/test.mp4 --task detect --model yolov11.pt --show
+python3 src/misars.py --input data/test.mp4 --task detect --model misars.pt --show
 
 # Run instance segmentation on camera feed
-python3 src/misars.py --input 0 --task segment --model yolov11-seg.pt --conf 0.3 --show
+python3 src/misars.py --input 0 --task segment --model misars.pt --conf 0.3 --show
 ```
 
 ### Step-by-Step Usage Guide
@@ -175,7 +175,7 @@ The current version of the toolkit has the following limitations:
 
 1. **Model Size Constraints**: Only supports 'n' and 's' model variants to maintain real-time performance on edge devices. Larger models may exceed memory or computational capabilities of some devices.
 
-2. **Pre-trained Models Only**: Currently limited to pre-trained YOLOv11 models. Custom model training requires external workflows.
+2. **Pre-trained Models Only**: Currently limited to pre-trained MISARS models. Custom model training requires external workflows.
 
 3. **Resolution Limits**: Performance degrades with very high-resolution inputs (>1080p). For best results, use input 1280×720 resolution.
 
