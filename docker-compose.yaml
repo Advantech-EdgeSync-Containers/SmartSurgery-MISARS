@@ -1,0 +1,79 @@
+# Version:      25.24
+# Author:       BoAn (boan.tsai@smartsurgerytek.com), ......#kindly append your name here
+# Created:      June 18, 2025
+# Description:  Note that this docker-compose file is utilized with advantech images to sync with real devices.
+
+# ==========================================================================
+
+services:
+  smartsurgery-misar:
+    image: edgesync.azurecr.io/advantech/advantech-yolo-vision-applications:1.0.0-Ubuntu20.04-ARM
+    container_name: advantech-yolo-vision
+    privileged: true
+    ipc: host
+    network_mode: host
+    runtime: nvidia
+    security_opt:
+      - seccomp:unconfined
+    tty: true
+    stdin_open: true
+    entrypoint: ["/bin/bash"]
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=${XAUTHORITY:-/tmp/.docker.xauth}
+      - QT_X11_NO_MITSHM=1
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all,compute,video,utility,graphics
+      - CUDA_DEVICE_MAX_CONNECTIONS=1
+      - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:64
+      - GST_DEBUG=3
+      - USE_GSTREAMER=1
+      - GST_DEBUG_NO_COLOR=1
+      - GST_PLUGIN_SCANNER=/usr/lib/aarch64-linux-gnu/gstreamer-1.0/gst-plugin-scanner
+      - GST_PLUGIN_SYSTEM_PATH=/usr/lib/aarch64-linux-gnu/gstreamer-1.0
+      - GST_PLUGIN_PATH=/usr/lib/aarch64-linux-gnu/gstreamer-1.0:/usr/lib/aarch64-linux-gnu/gstreamer-1.0/deepstream
+      - __EGL_VENDOR_LIBRARY_DIRS=/usr/share/glvnd/egl_vendor.d/:/etc/glvnd/egl_vendor.d/
+      - __GLX_VENDOR_LIBRARY_NAME=nvidia
+      - __GL_SYNC_TO_VBLANK=0
+      - XMODIFIERS=@im=none
+      - XDG_RUNTIME_DIR=/tmp
+      - LD_LIBRARY_PATH=/usr/lib/aarch64-linux-gnu/tegra:/usr/lib/aarch64-linux-gnu/gstreamer-1.0:/usr/lib/aarch64-linux-gnu:${LD_LIBRARY_PATH}
+    volumes:
+      - ./src:/advantech/src:rw
+      - ./models:/advantech/models:rw
+      - ./data:/advantech/data:rw
+      - ./results:/advantech/results:rw
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${XAUTHORITY:-$HOME/.Xauthority}:/tmp/.docker.xauth:rw
+      - /tmp:/tmp:rw
+      - /dev:/dev:rw
+      - /sys:/sys:rw
+      - /etc/nv_tegra_release:/etc/nv_tegra_release:ro
+      - /usr/lib/aarch64-linux-gnu/tegra:/usr/lib/aarch64-linux-gnu/tegra:ro
+      - /usr/lib/aarch64-linux-gnu/gstreamer-1.0:/usr/lib/aarch64-linux-gnu/gstreamer-1.0:ro
+      - /usr/lib/aarch64-linux-gnu/tegra-egl:/usr/lib/aarch64-linux-gnu/tegra-egl:ro
+      - /usr/src/jetson_multimedia_api:/usr/src/jetson_multimedia_api:ro
+      - /usr/share/glvnd/egl_vendor.d/:/usr/share/glvnd/egl_vendor.d/:ro
+      - /etc/glvnd/egl_vendor.d/:/etc/glvnd/egl_vendor.d/:ro
+    devices:
+      - /dev/nvhost-ctrl
+      - /dev/nvhost-ctrl-gpu
+      - /dev/nvhost-prof-gpu
+      - /dev/nvmap
+      - /dev/nvhost-gpu
+      - /dev/nvhost-as-gpu
+      - /dev/nvhost-vic
+      - /dev/nvhost-msenc
+      - /dev/nvhost-nvdec
+      - /dev/nvhost-nvjpg
+      - /dev/nvgpu/igpu0
+      - /dev/nvhost-nvdec1
+      - /dev/nvhost-nvenc1
+      - /dev/nvhost-nvdla0
+      - /dev/nvhost-nvdla1
+      - /dev/nvidia-modeset
+      - /dev/nvidia0
+      - /dev/nvidiactl
+    shm_size: '2gb'
+    restart: unless-stopped
+    working_dir: /advantech
